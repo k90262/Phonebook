@@ -1,11 +1,14 @@
 import pytest
 
-from src.phonebook import Phonebook
+from phonebook import Phonebook
 
 
 @pytest.fixture
-def phonebook():
-    return Phonebook()
+def phonebook(tmpdir):
+    "Provides an empty phonebook"
+    phonebook = Phonebook(tmpdir)
+    yield phonebook
+    phonebook.clear()
 
 
 def test_lookup_by_name(phonebook):
@@ -40,3 +43,7 @@ def test_is_consistent_with_duplicate_prefix(phonebook):
     phonebook.add("Bob", "12345")
     phonebook.add("Sue", "123")
     assert not phonebook.is_consistent()
+
+def test_is_consistent_all_names(phonebook):
+    phonebook.add("Bob", "12345")
+    assert phonebook.all_names() == {"Bob"}

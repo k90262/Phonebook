@@ -1,6 +1,12 @@
+import os
+from pathlib import Path
+
+
 class Phonebook:
-    def __init__(self):
+    def __init__(self, tmpdir):
         self.numbers = {}
+        self.filename = Path(tmpdir) / 'phonebook.txt'
+        self.cache = open(self.filename, 'w')
 
     def add(self, name, number):
         self.numbers[name] = number
@@ -16,3 +22,10 @@ class Phonebook:
                 if number1.startswith(number2):
                     return False
         return True
+
+    def all_names(self):
+        return set(self.numbers.keys())
+
+    def clear(self):
+        self.cache.close()
+        os.remove(self.filename)
